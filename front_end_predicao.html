@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsão de Preço de Imóvel</title>
+</head>
+<body>
+
+<h1>Previsão de Preço de Imóvel</h1>
+
+<form id="predictionForm">
+    <label for="price">Preço:</label>
+    <input type="number" id="price" step="any" required><br>
+
+    <label for="bedrooms">Número de Quartos:</label>
+    <input type="number" id="bedrooms" step="1" required><br>
+
+    <label for="bathrooms">Número de Banheiros:</label>
+    <input type="number" id="bathrooms" step="any" required><br>
+
+    <label for="sqft_living">Metros Quadrados do Espaço Interior:</label>
+    <input type="number" id="sqft_living" step="any" required><br>
+
+    <label for="sqft_lot">Metros Quadrados do Espaço do Terreno:</label>
+    <input type="number" id="sqft_lot" step="any" required><br>
+
+    <label for="floors">Número de Andares:</label>
+    <input type="number" id="floors" step="1" required><br>
+
+    <label for="waterfront">Tem Vista para o Mar (1) ou Não (0):</label>
+    <input type="number" id="waterfront" step="1" min="0" max="1" required><br>
+
+    <label for="view">Classificação da Vista (de 0 a 4):</label>
+    <input type="number" id="view" step="1" min="0" max="4" required><br>
+
+    <label for="condition">Condição da Casa (de 1 a 5):</label>
+    <input type="number" id="condition" step="1" min="1" max="5" required><br>
+
+    <label for="grade">Classificação da Casa (de 1 a 13):</label>
+    <input type="number" id="grade" step="1" min="1" max="13" required><br>
+
+    <label for="sqft_above">Metros Quadrados do Interior Acima do Nível do Solo:</label>
+    <input type="number" id="sqft_above" step="any" required><br>
+
+    <label for="sqft_basement">Metros Quadrados do Interior Abaixo do Nível do Solo:</label>
+    <input type="number" id="sqft_basement" step="any" required><br>
+
+    <label for="yr_built">Ano de Construção da Casa:</label>
+    <input type="number" id="yr_built" step="1" required><br>
+
+    <label for="lat">Latitude:</label>
+    <input type="number" id="lat" step="any" required><br>
+
+    <label for="long">Longitude:</label>
+    <input type="number" id="long" step="any" required><br>
+
+    <label for="sqft_living15">Metros Quadrados do Espaço Interno para os 15 Vizinhos Mais Próximos:</label>
+    <input type="number" id="sqft_living15" step="any" required><br>
+
+    <label for="sqft_lot15">Metros Quadrados do Terreno para os 15 Vizinhos Mais Próximos:</label>
+    <input type="number" id="sqft_lot15" step="any" required><br>
+
+    <button type="button" onclick="predict()">Prever</button>
+</form>
+
+<p id="result"></p>
+
+<script>
+function predict() {
+    const price = document.getElementById('price').value;
+    const bedrooms = document.getElementById('bedrooms').value;
+    const bathrooms = document.getElementById('bathrooms').value;
+    const sqft_living = document.getElementById('sqft_living').value;
+    const sqft_lot = document.getElementById('sqft_lot').value;
+    const floors = document.getElementById('floors').value;
+    const waterfront = document.getElementById('waterfront').value;
+    const view = document.getElementById('view').value;
+    const condition = document.getElementById('condition').value;
+    const grade = document.getElementById('grade').value;
+    const sqft_above = document.getElementById('sqft_above').value;
+    const sqft_basement = document.getElementById('sqft_basement').value;
+    const yr_built = document.getElementById('yr_built').value;
+    const lat = document.getElementById('lat').value;
+    const long = document.getElementById('long').value;
+    const sqft_living15 = document.getElementById('sqft_living15').value;
+    const sqft_lot15 = document.getElementById('sqft_lot15').value;
+
+    const userData = {
+        caracteristicas: [price, bedrooms, bathrooms, sqft_living, sqft_lot, floors, waterfront, view, condition, grade, sqft_above, sqft_basement, yr_built, lat, long, sqft_living15, sqft_lot15]
+    };
+
+fetch('http://127.0.0.1:5000/predict', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+})
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('result').innerText = 'Valor previsto do imóvel: ${data.valor_previsto}';
+    })
+    .catch((error) => {
+        console.error('Erro:', error);
+    });
+}
+</script>
+
+</body>
+</html>
