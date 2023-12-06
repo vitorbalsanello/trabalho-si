@@ -17,26 +17,39 @@
         }
         .app-result {
             display: flex;
-            justify-content: center;
             flex: 1 1 auto;
             flex-wrap: nowrap;
             text-wrap: nowrap;
-        }
-        .app-result .symbol {
-            font-size: 40px;
-            vertical-align: text-bottom;
+            flex-direction: column;
         }
         #result {
-            font-size: 80px;
+            font-size: 56px;
         }
         #predictionForm {
-            flex: 1 2 auto;
+            flex: 1 0 auto;
         }
         .wrapper {
             max-width: 780px !important;
         }
         input:invalid {
             border: 1px solid red;
+        }
+        .animate {
+            display: inline-block;
+            border: 6px solid red;
+            border-radius: 100%;
+            border-top-color: transparent;
+            width: 40px;
+            height: 40px;
+            animation: spin 0.5s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
     </style>
 </head>
@@ -301,14 +314,25 @@
               </div>
             </form>
             <div class="app-result">
-                <p><span class="symbol">R$</span> <span id="result">0</span></p>
+                <p>Valor previsto do imóvel:</p>
+                <p><span class="loading"></span> <span id="result"></span></p>
             </div>
         </div>
     </div>
     <script>
         const form = document.getElementById("predictionForm");
+        const loading = (isloading) => {
+            const loadingdiv = document.querySelector(".loading");
+            if (isloading) {
+                loadingdiv.classList.add("animate")
+            } else {
+                loadingdiv.classList.remove("animate")
+            }
+        }
 
         function predict(e) {
+            loading(true);
+
             e.preventDefault();
             // Obtenha os valores dos campos do formulário
             const bedrooms = document.getElementById('bedrooms').value;
@@ -340,11 +364,16 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    document.getElementById('result').innerText = `Valor previsto do imóvel: ${data.valor_previsto}`;
+                    const cost = new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                    });
+                    document.getElementById('result').innerText = cost.format(data.valor_previsto);
                 })
                 .catch((error) => {
                     console.error('Erro:', error);
-                });
+                })
+                .finally(() => loading(false));
             }
         }
     
