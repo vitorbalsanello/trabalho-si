@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previsão de Preço de Imóvel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .app-title {
+            font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            margin: 24px 0 24px 32px;
+            font-size: 32px;
+        }
+        .app-content {
+            display: flex;
+            gap: 16px;
+        }
+        .app-result {
+            display: flex;
+            flex: 1 1 auto;
+            flex-wrap: nowrap;
+            text-wrap: nowrap;
+            flex-direction: column;
+        }
+        #result {
+            font-size: 56px;
+        }
+        #predictionForm {
+            flex: 1 0 auto;
+        }
+        .wrapper {
+            max-width: 780px !important;
+        }
+        input:invalid {
+            border: 1px solid red;
+        }
+        .animate {
+            display: inline-block;
+            border: 6px solid red;
+            border-radius: 100%;
+            border-top-color: transparent;
+            width: 40px;
+            height: 40px;
+            animation: spin 0.5s linear infinite;
+        }
+        @keyframes spin {
+            0% {
+                transform: rotate(0);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sm:container sm:mx-auto wrapper">
+        <h1 class="app-title">🏠 Previsão de Preço de Imóvel</h1>
+        <div class="app-content">
+            <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" id="predictionForm">
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="bedrooms">
+                  Número de quartos
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="bedrooms"
+                    type="number"
+                    step="1"
+                    value="1"
+                    min="1"
+                    placeholder="0"
+                    required
+                >
+              </div>
+    
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="bathrooms">
+                  Número de banheiros
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="bathrooms"
+                    type="number"
+                    step="1"
+                    value="1"
+                    min="1"
+                    placeholder="1"
+                    required
+                >
+              </div>
+    
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="sqft_living">
+                    Metros Quadrados do Espaço Interior
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="sqft_living"
+                    type="number"
+                    step="any"
+                    value="1"
+                    min="1"
+                    required
+                >
+              </div>
+    
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="sqft_lot">
+                    Metros Quadrados do Espaço do Terreno
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="sqft_lot"
+                    type="number"
+                    step="any"
+                    value="1"
+                    min="1"
+                    required
+                >
+              </div>
+    
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="floors">
+                    Número de Andares
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="floors"
+                    type="number"
+                    step="1"
+                    value="1"
+                    min="1"
+                    required
+                >
+              </div>
+    
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="waterfront">
+                    Tem Vista para o Mar (1) ou Não (0)
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="waterfront"
+                    type="number"
+                    step="1"
+                    value="0"
+                    min="0"
+                    max="1"
+                    required
+                >
+              </div>
+    
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="view">
+                    Classificação da Vista (de 0 a 4)
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="view"
+                    type="number"
+                    step="1"
+                    value="0"
+                    min="0"
+                    max="4"
+                    required
+                >
+              </div>
+    
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="condition">
+                    Condição da Casa (de 1 a 5)
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="condition"
+                    type="number"
+                    step="1"
+                    value="1"
+                    min="1"
+                    max="5"
+                    required
+                >
+              </div>1
+            
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="grade">
+                    Classificação da Casa (de 1 a 13)
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="grade"
+                    type="number"
+                    step="1"
+                    value="1"
+                    min="1"
+                    max="13"
+                    required
+                >
+              </div>
+        
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="sqft_above">
+                    Metros Quadrados do Interior Acima do Nível do Solo
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="sqft_above"
+                    type="number"
+                    step="any"
+                    value="1"
+                    min="1"
+                    required
+                >
+              </div>
+    
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="sqft_basement">
+                    Metros Quadrados do Interior Abaixo do Nível do Solo
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="sqft_basement"
+                    type="number"
+                    step="any"
+                    value="1"
+                    min="1"
+                    required
+                >
+              </div>
+        
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="yr_built">
+                    Ano de Construção da Casa
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="yr_built"
+                    type="text"
+                    value="2020"
+                    required
+                    pattern="^[0-9]{4}$"
+                >
+              </div>
+    
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="lat">
+                    Latitude
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="lat"
+                    type="number"
+                    step="any"
+                    value="0"
+                    required
+                >
+              </div>
+    
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="long">
+                    Longitude
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="long"
+                    type="number"
+                    step="any"
+                    value="0"
+                    required
+                >
+              </div>
+    
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="sqft_living15">
+                    Metros Quadrados do Espaço Interno para os 15 Vizinhos Mais Próximos
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="sqft_living15"
+                    type="number"
+                    min="0"
+                    step="any"
+                    value="0"
+                    required
+                >
+              </div>
+    
+              <div class="mb-4">
+                <label class="block text-gray-700 text-sm font-bold mb-2" for="sqft_lot15">
+                    Metros Quadrados do Terreno para os 15 Vizinhos Mais Próximos
+                </label>
+                <input
+                    class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    id="sqft_lot15"
+                    type="number"
+                    step="any"
+                    min="0"
+                    value="0"
+                    required
+                >
+              </div>
+    
+              <div class="flex items-center justify-between">
+                <button
+                    class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    type="submit"
+                    id="submitter"
+                >
+                  Prever
+                </button>
+              </div>
+            </form>
+            <div class="app-result">
+                <p>Valor previsto do imóvel:</p>
+                <p><span class="loading"></span> <span id="result"></span></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        const form = document.getElementById("predictionForm");
+        const loading = (isloading) => {
+            const loadingdiv = document.querySelector(".loading");
+            if (isloading) {
+                loadingdiv.classList.add("animate")
+            } else {
+                loadingdiv.classList.remove("animate")
+            }
+        }
+
+        function predict(e) {
+            loading(true);
+
+            e.preventDefault();
+            // Obtenha os valores dos campos do formulário
+            const bedrooms = document.getElementById('bedrooms').value;
+            const bathrooms = document.getElementById('bathrooms').value;
+            const sqft_living = document.getElementById('sqft_living').value;
+            const sqft_lot = document.getElementById('sqft_lot').value;
+            const floors = document.getElementById('floors').value;
+            const waterfront = document.getElementById('waterfront').value;
+            const view = document.getElementById('view').value;
+            const condition = document.getElementById('condition').value;
+            const grade = document.getElementById('grade').value;
+            const sqft_above = document.getElementById('sqft_above').value;
+            const sqft_basement = document.getElementById('sqft_basement').value;
+            const yr_built = document.getElementById('yr_built').value;
+            const lat = document.getElementById('lat').value;
+            const long = document.getElementById('long').value;
+            const sqft_living15 = document.getElementById('sqft_living15').value;
+            const sqft_lot15 = document.getElementById('sqft_lot15').value;
+
+            const userData = {
+                caracteristicas: [bedrooms, bathrooms, sqft_living, sqft_lot, floors, waterfront, view, condition, grade, sqft_above, sqft_basement, yr_built, lat, long, sqft_living15, sqft_lot15]
+            };
+            const isInvalid = [...e.target.elements].find((e) => !e.validity.valid)
+            if(!isInvalid) {
+                fetch('https://si-back.onrender.com/predict', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(userData),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const cost = new Intl.NumberFormat('pt-BR', {
+                        style: 'currency',
+                        currency: 'BRL',
+                    });
+                    document.getElementById('result').innerText = cost.format(data.valor_previsto);
+                })
+                .catch((error) => {
+                    console.error('Erro:', error);
+                })
+                .finally(() => loading(false));
+            }
+        }
+    
+        form.addEventListener("submit", predict);
+    </script>
+</body>
+</html>
+
