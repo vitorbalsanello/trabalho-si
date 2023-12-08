@@ -364,7 +364,7 @@
                 .then(data => {
                     const cost = new Intl.NumberFormat('pt-BR', {
                         style: 'currency',
-                        currency: 'BRL',
+                        currency: 'USD',
                     });
                     document.getElementById('result').innerText = cost.format(data.valor_previsto);
                 })
